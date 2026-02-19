@@ -408,18 +408,23 @@ HKEY_CURRENT_USER\Software\Classes\Directory\shell\DevBox
 
 - Set the **(Default)** value to `Open in DevBox` (or any label you prefer).
 - To add an icon, create a string value named `Icon` and set it as `%DEVBOX_PATH%\devbox.ico`.
+- Create new sub-key `command` under `DevBox` and set its **(Default)** value to:
 
-Then create a sub-key:
-
-```text
-HKEY_CURRENT_USER\Software\Classes\Directory\shell\DevBox\command
-```
-
-Set the **(Default)** value to:
+  ```text
+  powershell.exe -ExecutionPolicy Bypass -NoProfile -Command "& \"$env:DEVBOX_PATH\run-devbox.ps1\" \"%1\""
+  ```
 
 ```text
-powershell.exe -ExecutionPolicy Bypass "%DEVBOX_PATH%\run-devbox.ps1" -Path "%V"
+HKEY_CURRENT_USER\Software\Classes\Directory\Background\shell\DevBox
 ```
+
+- Set the **(Default)** value to `Open in DevBox` (or any label you prefer).
+- To add an icon, create a string value named `Icon` and set it as `%DEVBOX_PATH%\devbox.ico`.
+- Create new sub-key `command` under `DevBox` and set its **(Default)** value to:
+
+  ```text
+  powershell.exe -ExecutionPolicy Bypass -NoProfile -Command "& \"$env:DEVBOX_PATH\run-devbox.ps1\" \"%V\""
+  ```
 
 ## 9. 🤝 Contributing
 
@@ -427,4 +432,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 10. 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Xinor-a/portable-neovim-devbox/blob/main/LICENSE) file for details.

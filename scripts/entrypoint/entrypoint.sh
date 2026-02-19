@@ -62,14 +62,6 @@ set_group_permissions() {
         && chmod -R g+rw "${target_dir}"
 }
 
-# Set user as owner and permissions for a target directory and its contents
-set_user_owner_and_permissions() {
-    local target_dir="$1"
-    chown -R "${USER_NAME}" "$target_dir" \
-        && chmod -R u+X "$target_dir" \
-        && chmod -R u+rw "$target_dir"
-}
-
 # Set symlink with error handling
 set_symlink() {
     local target="$1"
@@ -199,7 +191,9 @@ log_output ""
 
 log_status "Started setting ownership for /home/${USER_NAME}/..."
 
-set_user_owner_and_permissions /home/${USER_NAME}/
+chown "${USER_NAME}" /home/${USER_NAME}/
+find /home/${USER_NAME}/ -maxdepth 1 -mindepth 1 ! -name "project" \
+    -exec chown -R "${USER_NAME}" {} \;
 
 log_status "Completed."
 log_output ""
