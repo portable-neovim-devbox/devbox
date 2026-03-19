@@ -53,6 +53,7 @@ if ! apt-get update \
     htop \
     jq \
     less \
+    locales \
     nano \
     tree \
     unzip \
@@ -64,6 +65,16 @@ if ! apt-get update \
     log_error "Failed to install basic development tools"
     exit 1
 fi
+
+log_status "Completed."
+log_output ""
+
+################################################################################
+# Configure locale
+
+log_status "Configuring locale..."
+
+locale-gen $LANG
 
 log_status "Completed."
 log_output ""

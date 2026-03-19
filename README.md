@@ -137,13 +137,14 @@ Edit the `.env` file in the project root to match your setup. This file is used 
 - **Build time** — `docker compose build` reads `.env` automatically and passes the values as build arguments. `NEOVIM_VERSION`, `USER_NAME`, `HOST_OS` are baked into the image at this stage.
 - **Runtime** — `USER_ID` and `GROUP_ID` can be overridden with `-e` when running `docker run` to match your host user. This is only needed on **Linux** where bind-mounted file ownership must match the host. On **Windows** and **macOS**, Docker Desktop handles file permissions through its VM layer, so these options can be omitted.
 
-| Variable         | Description                                                     | Default   |
-| :--------------- | :-------------------------------------------------------------- | :-------- |
-| `NEOVIM_VERSION` | Neovim version to install (`"stable"` or a tag like `"v0.9.8"`) | `stable`  |
-| `USER_NAME`      | Main user name inside the container                             | `user`    |
-| `USER_ID`        | UID for the container user (matched to host for file ownership) | `1001`    |
-| `GROUP_ID`       | GID for the shared group inside the container                   | `1010`    |
-| `HOST_OS`        | Your host OS (`"Windows"`, `"MacOS"`, or `"Linux"`)             | `Windows` |
+| Variable         | Description                                                     | Default        |
+| :--------------- | :-------------------------------------------------------------- | :------------- |
+| `NEOVIM_VERSION` | Neovim version to install (`"stable"` or a tag like `"v0.9.8"`) | `stable`       |
+| `USER_NAME`      | Main user name inside the container                             | `user`         |
+| `USER_ID`        | UID for the container user (matched to host for file ownership) | `1001`         |
+| `GROUP_ID`       | GID for the shared group inside the container                   | `1010`         |
+| `HOST_OS`        | Your host OS (`"Windows"`, `"MacOS"`, or `"Linux"`)             | `Windows`      |
+| `LANG`           | Locale setting for the container                                | `en_US.UTF-8`  |
 
 #### 5.2.1. Proxy Settings (Optional)
 
@@ -188,18 +189,21 @@ Start a devbox container with access to the shared volumes and your project dire
 
 ```bash
 docker run --rm -it \
+    -e LANG=en_US.UTF-8 \
     --volumes-from devbox-storage-master \
     -v /path/to/project:/home/user/project \
     devbox:latest
 ```
 
-Replace `/path/to/project` with the absolute path to your project directory.
+- Replace `/path/to/project` with the absolute path to your project directory.
+- For Japanese locale, use `-e LANG=ja_JP.UTF-8` instead.
 
 > **Linux (Docker Engine) only:** Add `-e USER_ID=$(id -u) -e GROUP_ID=$(id -g)` to match bind-mounted file ownership with your host user. On Windows/macOS (Docker Desktop), this is unnecessary because the VM layer handles permissions automatically.
 
 ```bash
 docker run --rm -it \
-    `-e USER_ID=$(id -u) -e GROUP_ID=$(id -g)` \
+    -e LANG=en_US.UTF-8 \
+    -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) \
     --volumes-from devbox-storage-master \
     -v /path/to/project:/home/user/project \
     devbox:latest
@@ -213,6 +217,7 @@ Start a new devbox container with the shared volumes and your project mounted:
 
 ```bash
 docker run --rm -it \
+    -e LANG=en_US.UTF-8 \
     --volumes-from devbox-storage-master \
     -v /path/to/project:/home/user/project \
     devbox:latest
@@ -359,6 +364,7 @@ Once you have built the image with `docker compose build`, it is tagged as `devb
 
 ```bash
 docker run --rm -it \
+    -e LANG=en_US.UTF-8 \
     --volumes-from devbox-storage-master \
     -v /path/to/project:/home/user/project \
     devbox:latest

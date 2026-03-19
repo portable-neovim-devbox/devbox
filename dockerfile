@@ -38,6 +38,12 @@ COPY ./scripts/init/ /tmp/init/
 ARG NEOVIM_VERSION
 
 ################################################################################
+# Set environment variables for build arguments
+
+ARG LANG
+ENV LANG=$LANG
+
+################################################################################
 # Run initialization script
 RUN chmod 777 /tmp/init/init.sh
 RUN mkdir -p /var/log && chmod 777 /var/log

@@ -32,6 +32,7 @@ if ($strRet -notcontains "devbox_devbox-data" -or
 }
 
 docker run --rm -it `
+    -e LANG=en_US.UTF-8 `
     --volumes-from devbox-storage-master `
     -v "${Path}:/home/user/project" `
     devbox:latest

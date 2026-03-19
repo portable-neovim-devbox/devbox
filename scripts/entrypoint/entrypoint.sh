@@ -207,5 +207,5 @@ log_output "========================================"
 ################################################################################
 # Final execution
 
-cd /home/$USER_NAME/
+cd /home/$USER_NAME/project/
 exec gosu $USER_NAME "$@"
