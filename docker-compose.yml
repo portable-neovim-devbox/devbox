@@ -27,10 +27,10 @@ services:
         volumes:
             - devbox-data:/etc/devbox/
             - root-dotssh:/root/.ssh
-            - user-dotssh:/home/${USER_NAME}/.ssh
+            - user-dotssh:/home/${USER_NAME:-user}/.ssh
             - nvim-plugin-cache:/etc/nvim/lazy/
             - root-nvim-plugin:/root/.local/share/nvim
-            - user-nvim-plugin:/home/${USER_NAME}/.local/share/nvim
+            - user-nvim-plugin:/home/${USER_NAME:-user}/.local/share/nvim
 
 volumes:
     devbox-data:
