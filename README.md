@@ -196,7 +196,7 @@ docker run --rm -it \
 ```
 
 - Replace `/path/to/project` with the absolute path to your project directory.
-- For Japanese locale, use `-e LANG=ja_JP.UTF-8` instead.
+- For Japanese locale, use `-e LANG=ja_JP.UTF-8` instead. If you are using `run-devbox.ps1`, also change the `-e LANG=en_US.UTF-8` line in the script to `-e LANG=ja_JP.UTF-8`.
 
 > **Linux (Docker Engine) only:** Add `-e USER_ID=$(id -u) -e GROUP_ID=$(id -g)` to match bind-mounted file ownership with your host user. On Windows/macOS (Docker Desktop), this is unnecessary because the VM layer handles permissions automatically.
 

@@ -70,11 +70,11 @@ log_status "Completed."
 log_output ""
 
 ################################################################################
-# Configure locale
+# Generate locales
 
-log_status "Configuring locale..."
+log_status "Generating locales..."
 
-locale-gen $LANG
+sudo locale-gen ja_JP.utf8
 
 log_status "Completed."
 log_output ""
