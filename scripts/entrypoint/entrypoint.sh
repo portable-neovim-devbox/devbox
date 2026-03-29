@@ -127,6 +127,19 @@ log_status "Completed."
 log_output ""
 
 ################################################################################
+# Add environment variables to /etc/bash.bashrc
+
+log_status "Started adding environment variables to /etc/bash.bashrc..."
+
+if ! grep -q "export LANG=" /etc/bash.bashrc; then
+    echo "export LANG=${LANG:-en_US.UTF-8}" >> /etc/bash.bashrc
+    log_info "Added 'export LANG=${LANG:-en_US.UTF-8}' to /etc/bash.bashrc"
+fi
+
+log_status "Completed."
+log_output ""
+
+################################################################################
 # Loop through all subdirectories in lexicographical order
 
 log_output "========================================"
