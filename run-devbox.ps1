@@ -31,8 +31,19 @@ if ($strRet -notcontains "devbox_devbox-data" -or
 
 }
 
+$UserName = docker run --rm `
+    --entrypoint bash `
+    --volumes-from devbox-storage-master `
+    devbox:latest `
+    -c "ls /home | grep -v ubuntu | head -1"
+$UserName = $UserName.Trim()
+
+if (-not $UserName) {
+    $UserName = "user"
+}
+
 docker run --rm -it `
     -e LANG=en_US.UTF-8 `
     --volumes-from devbox-storage-master `
-    -v "${Path}:/home/user/project" `
+    -v "${Path}:/home/${UserName}/project" `
     devbox:latest
