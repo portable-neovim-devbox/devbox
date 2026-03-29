@@ -70,16 +70,6 @@ log_status "Completed."
 log_output ""
 
 ################################################################################
-# Generate locales
-
-log_status "Generating locales..."
-
-sudo locale-gen ja_JP.utf8
-
-log_status "Completed."
-log_output ""
-
-################################################################################
 # Backup and configure /bash.bashrc
 
 log_status "Started to create backup of /etc/bash.bashrc..."
