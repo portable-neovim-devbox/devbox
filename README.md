@@ -366,15 +366,29 @@ Once you have built the image with `docker compose build`, it is tagged as `devb
 
 ### 8.1. Linux / macOS Setup
 
-Set the `LANG` environment variable to your preferred locale before running the launch script:
+Add the following to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-export LANG=ja_JP.UTF-8
+export DEVBOX_PATH="/path/to/devbox"
+alias devbox='bash "$DEVBOX_PATH/run-devbox.sh"'
+export LANG=ja_JP.UTF-8  # optional: set your preferred locale
 ```
 
-To make it permanent, add the line above to your `~/.bashrc` or `~/.zshrc`.
+Replace `/path/to/devbox` with the absolute path to this repository.
+Set `LANG` to your preferred locale, or remove the line if not needed.
 
-Alternatively, edit the `-e LANG` value in `run-devbox.sh` directly.
+After editing, reload the shell:
+
+```bash
+source ~/.bashrc
+```
+
+You can then launch devbox from any directory:
+
+```bash
+devbox                        # mount current directory
+devbox /path/to/project       # mount specified directory
+```
 
 ### 8.2. Windows Setup
 
