@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATH_ARG="$(realpath "$1")"
+PATH_ARG="$(realpath "${1:-$PWD}")"
 
 VOLUMES=(
     "devbox_devbox-data"
