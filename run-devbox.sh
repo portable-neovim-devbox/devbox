@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATH_ARG="$(realpath "$1")"
+PATH_ARG="$(realpath "${1:-$PWD}")"
 
 VOLUMES=(
     "devbox_devbox-data"
@@ -44,7 +44,7 @@ if [ -z "$USER_NAME" ]; then
 fi
 
 docker run --rm -it \
-    -e LANG=en_US.UTF-8 \
+    -e LANG \
     --volumes-from devbox-storage-master \
     -v "${PATH_ARG}:/home/${USER_NAME}/project" \
     devbox:latest

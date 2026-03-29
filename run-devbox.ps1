@@ -1,5 +1,5 @@
 Param(
-    [string]$Path
+    [string]$Path = (Get-Location).Path
 )
 
 $strRet = docker volume ls -q
