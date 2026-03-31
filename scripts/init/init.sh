@@ -55,6 +55,7 @@ if ! apt-get update \
     less \
     locales \
     nano \
+    netcat-openbsd \
     tree \
     unzip \
     vim \
