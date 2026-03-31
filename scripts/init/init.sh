@@ -41,6 +41,29 @@ log_info "Started initialization script."
 log_output ""
 
 ################################################################################
+# Configure APT proxy if needed
+
+log_status "Configuring APT proxy settings..."
+
+str_proxy_info=""
+
+if [ -n "${http_proxy:-}" ]; then
+    str_proxy_info+="Acquire::http::Proxy \"${http_proxy}\";\n"
+fi
+if [ -n "${https_proxy:-}" ]; then
+    str_proxy_info+="Acquire::https::Proxy \"${https_proxy}\";\n"
+fi
+
+if touch /etc/apt/apt.conf.d/70proxy; then
+    if [ -n "$str_proxy_info" ]; then
+        printf "%b" "$str_proxy_info" > /etc/apt/apt.conf.d/70proxy
+    fi
+fi
+
+log_status "Completed."
+log_output ""
+
+################################################################################
 # Install basic development tools
 
 log_status "Installing basic development tools..."
