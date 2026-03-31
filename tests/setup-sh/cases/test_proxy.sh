@@ -6,7 +6,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
-printf "\n\n\n\nhttp://proxy.example.com:8080\nhttps://proxy.example.com:8080\nlocalhost,127.0.0.1\nn\n" \
+printf "\n\n\nhttp://proxy.example.com:8080\nhttps://proxy.example.com:8080\nlocalhost,127.0.0.1\nn\n" \
     | bash "${REPO_ROOT}/setup.sh"
 
 ENV_FILE="${REPO_ROOT}/.env"

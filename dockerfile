@@ -51,21 +51,6 @@ RUN rm -rf /tmp/init/
 # SSH Setup
 
 ################################################################################
-# Validate HOST_OS argument
-ARG HOST_OS
-
-# Add os name to environment variable
-RUN \
-if [ ! "$HOST_OS" = "Windows" ] \
-&& [ ! "$HOST_OS" = "MacOS" ] \
-&& [ ! "$HOST_OS" = "Linux" ] ; then \
-echo "Unsupported HOST_OS: $HOST_OS. Supported values are Windows, MacOS, Linux." >&2; \
-exit 1; \
-fi
-
-ENV HOST_OS=$HOST_OS
-
-################################################################################
 # Set default entrypoint and command
 
 ENTRYPOINT ["/etc/devbox/scripts/entrypoint/entrypoint.sh"]
