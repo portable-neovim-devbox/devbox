@@ -28,7 +28,6 @@ This repository provides a **fully configured Docker container** for a portable 
 
 - Beginners completely new to terminal/command-line interfaces
 - Developers who prefer GUI-based IDEs (VS Code, IntelliJ, etc.)
-- Users who need Windows-native development tools (WSL may help them)
 - Teams requiring specific IDE integrations not available in Neovim
 
 ### 2.3. 📚 Recommended Background
@@ -93,7 +92,6 @@ See more about Tmux in [Repository of Tmux](https://github.com/tmux/tmux).
 
 - Linux (with Docker Engine)
 - macOS 11+ (with Docker Desktop)
-- Windows 10/11 (with Docker Desktop)
 
 ## 5. 🔧 Installation
 
@@ -134,8 +132,13 @@ If you also want to customize configurations or contribute to the project:
 
 Edit the `.env` file in the project root to match your setup. This file is used in two ways:
 
+<<<<<<< Updated upstream
 - **Build time** — `docker compose build` reads `.env` automatically and passes the values as build arguments. `NEOVIM_VERSION`, `USER_NAME`, `HOST_OS` are baked into the image at this stage.
+- **Runtime** — `USER_ID`, `GROUP_ID`, and `LANG` can be overridden with `-e` when running `docker run`. `USER_ID`/`GROUP_ID` are only needed on **Linux** where bind-mounted file ownership must match the host. On **macOS**, Docker Desktop handles file permissions through its VM layer, so these options can be omitted.
+=======
+- **Build time** — `docker compose build` reads `.env` automatically and passes the values as build arguments. `NEOVIM_VERSION`, `USER_NAME` are baked into the image at this stage.
 - **Runtime** — `USER_ID`, `GROUP_ID`, and `LANG` can be overridden with `-e` when running `docker run`. `USER_ID`/`GROUP_ID` are only needed on **Linux** where bind-mounted file ownership must match the host. On **Windows** and **macOS**, Docker Desktop handles file permissions through its VM layer, so these options can be omitted.
+>>>>>>> Stashed changes
 
 **Build-time variables (`.env`):**
 
@@ -145,13 +148,16 @@ Edit the `.env` file in the project root to match your setup. This file is used 
 | `USER_NAME`      | Main user name inside the container                             | `user`    |
 | `USER_ID`        | UID for the container user (matched to host for file ownership) | `1001`    |
 | `GROUP_ID`       | GID for the shared group inside the container                   | `1010`    |
-| `HOST_OS`        | Your host OS (`"Windows"`, `"MacOS"`, or `"Linux"`)             | `Windows` |
+<<<<<<< Updated upstream
+| `HOST_OS`        | Your host OS (`"MacOS"` or `"Linux"`)                           | `Linux`   |
+=======
+>>>>>>> Stashed changes
 
 **Runtime variables (`-e` flag):**
 
 | Variable   | Description                                                                                                                                    | Default       |
 | :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| `LANG`     | Locale for the container. On Linux/macOS, pass `-e LANG` to inherit from host. On Windows, set explicitly (e.g. `en_US.UTF-8`, `ja_JP.UTF-8`). | `en_US.UTF-8` |
+| `LANG`     | Locale for the container. Pass `-e LANG` to inherit from host, or set explicitly (e.g. `en_US.UTF-8`, `ja_JP.UTF-8`). | `en_US.UTF-8` |
 | `USER_ID`  | Override UID at runtime (Linux only)                                                                                                           | from `.env`   |
 | `GROUP_ID` | Override GID at runtime (Linux only)                                                                                                           | from `.env`   |
 
@@ -214,16 +220,6 @@ docker run --rm -it \
     devbox:latest
 ```
 
-**Windows (PowerShell):**
-
-```powershell
-docker run --rm -it `
-    -e LANG=en_US.UTF-8 `
-    --volumes-from devbox-storage-master `
-    -v "C:\path\to\project:/home/user/project" `
-    devbox:latest
-```
-
 Replace the path with the absolute path to the project you want to work on. The `--rm` flag removes the container on exit; persistent data is stored in the `devbox-storage` volumes.
 
 To attach to an already running devbox container:
@@ -244,7 +240,6 @@ ProjectRoot/
 ├── dockerfile                  # Docker image build configuration
 ├── LICENSE                     # MIT License
 ├── README.md                   # This file
-├── run-devbox.ps1              # Launch script for Windows (PowerShell)
 ├── dotfiles/                   # Configuration files for tools in the container
 │   ├── git/
 │   │   ├── .gitattributes      # Git attributes
@@ -342,10 +337,9 @@ ProjectRoot/
 
 #### 7.3.3. Host Launch Scripts
 
-| File             | Description                           |
-| :--------------- | :------------------------------------ |
-| `run-devbox.sh`  | Bash launch script for Linux / macOS  |
-| `run-devbox.ps1` | PowerShell launch script for Windows  |
+| File            | Description                          |
+| :-------------- | :----------------------------------- |
+| `run-devbox.sh` | Bash launch script for Linux / macOS |
 
 ### 7.4. Docker Volumes
 
@@ -390,74 +384,11 @@ devbox                        # mount current directory
 devbox /path/to/project       # mount specified directory
 ```
 
-### 8.2. Windows Setup
+### 8.2. Launch Scripts
 
-#### 8.2.1. Environment Variables
+The repository includes a launch script that automates volume creation and container startup. It checks whether the required Docker volumes exist, creates them if missing, detects the container username automatically, and runs the devbox container with the specified project directory.
 
-Set the following environment variables before running the launch script.
-
-**`DEVBOX_PATH`** — the repository root, used by the launch script to locate `docker-compose.yml`:
-
-1. Open **Settings** > **System** > **About** > **Advanced system settings**.
-2. Click **Environment Variables**.
-3. Under **User variables**, click **New** and add:
-   - **Variable name:** `DEVBOX_PATH`
-   - **Variable value:** the absolute path to this repository (e.g. `D:\devbox`)
-
-**`LANG`** — your preferred locale (e.g. `ja_JP.UTF-8`):
-
-Or set both via PowerShell (admin):
-
-```powershell
-[Environment]::SetEnvironmentVariable("DEVBOX_PATH", "D:\devbox", "User")
-[Environment]::SetEnvironmentVariable("LANG", "ja_JP.UTF-8", "User")
-```
-
-Replace `D:\devbox` with your actual repository path.
-
-Alternatively, you can set `LANG` per-session before running the script:
-
-```powershell
-$env:LANG = "ja_JP.UTF-8"
-```
-
-Or edit the `-e LANG` value in `run-devbox.ps1` directly.
-
-#### 8.2.2. Right-Click Context Menu (Explorer)
-
-You can add a **"DevBox"** entry to the Windows Explorer folder context menu so you can open any folder in the devbox container with a right-click.
-
-Open **Registry Editor** (`regedit`) and create the following key:
-
-```text
-HKEY_CURRENT_USER\Software\Classes\Directory\shell\DevBox
-```
-
-- Set the **(Default)** value to `Open in DevBox` (or any label you prefer).
-- To add an icon, create a string value named `Icon` and set it as `%DEVBOX_PATH%\devbox.ico`.
-- Create new sub-key `command` under `DevBox` and set its **(Default)** value to:
-
-  ```text
-  powershell.exe -ExecutionPolicy Bypass -NoProfile -Command "& \"$env:DEVBOX_PATH\run-devbox.ps1\" \"%1\""
-  ```
-
-```text
-HKEY_CURRENT_USER\Software\Classes\Directory\Background\shell\DevBox
-```
-
-- Set the **(Default)** value to `Open in DevBox` (or any label you prefer).
-- To add an icon, create a string value named `Icon` and set it as `%DEVBOX_PATH%\devbox.ico`.
-- Create new sub-key `command` under `DevBox` and set its **(Default)** value to:
-
-  ```text
-  powershell.exe -ExecutionPolicy Bypass -NoProfile -Command "& \"$env:DEVBOX_PATH\run-devbox.ps1\" \"%V\""
-  ```
-
-### 8.3. Launch Scripts
-
-The repository includes launch scripts that automate volume creation and container startup. They check whether the required Docker volumes exist, create them if missing, detect the container username automatically, and run the devbox container with the specified project directory.
-
-#### 8.3.1. Linux / macOS (Bash)
+#### 8.2.1. Linux / macOS (Bash)
 
 ```bash
 bash run-devbox.sh /path/to/project
@@ -467,18 +398,6 @@ If the path argument is omitted, the current directory is used:
 
 ```bash
 bash run-devbox.sh
-```
-
-#### 8.3.2. Windows (PowerShell)
-
-```powershell
-.\run-devbox.ps1 -Path "C:\path\to\project"
-```
-
-If `-Path` is omitted, the current directory is used:
-
-```powershell
-.\run-devbox.ps1
 ```
 
 ## 9. 🤝 Contributing
