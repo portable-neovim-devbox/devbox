@@ -1,0 +1,15 @@
+name: Test setup.sh
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Make scripts executable
+        run: chmod +x setup.sh tests/setup-sh/run_tests.sh tests/setup-sh/cases/*.sh
+      - name: Run tests
+        run: bash tests/setup-sh/run_tests.sh
