@@ -59,6 +59,7 @@ if ! apt-get update \
     unzip \
     vim \
     wget \
+    xclip \
     zip \
 || ! apt-get autoremove -y \
 || ! rm -rf /var/lib/apt/lists/*; then
