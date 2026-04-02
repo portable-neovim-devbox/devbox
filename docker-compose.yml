@@ -16,7 +16,7 @@ services:
             - HTTP_PROXY=${HTTP_PROXY:-}
             - HTTPS_PROXY=${HTTPS_PROXY:-}
             - NO_PROXY=${NO_PROXY:-}
-            - LANG=${LANG:-en_US.UTF-8}
+            - LANG=${LANG}
         tty: true
     devbox-storage:
         build:

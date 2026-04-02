@@ -23,7 +23,7 @@ check() {
 
 check "NEOVIM_VERSION" "stable"
 check "USER_NAME"      "user"
-check "LANG"           "en_US.UTF-8"
+check "LANG"           ""
 check "HTTP_PROXY"     ""
 check "HTTPS_PROXY"    ""
 check "NO_PROXY"       ""
