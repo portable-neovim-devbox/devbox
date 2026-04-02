@@ -131,14 +131,14 @@ log_output ""
 
 log_status "Started adding environment variables to /etc/bash.bashrc..."
 
-locale-gen "${LANG:-en_US.UTF-8}"
+locale-gen "${LANG}"
 
 if grep -q "export LANG=" /etc/bash.bashrc; then
-    sed -i "s/^export LANG=.*/export LANG=${LANG:-en_US.UTF-8}/" /etc/bash.bashrc
+    sed -i "s/^export LANG=.*/export LANG=${LANG}/" /etc/bash.bashrc
 else
-    echo "export LANG=${LANG:-en_US.UTF-8}" >> /etc/bash.bashrc
+    echo "export LANG=${LANG}" >> /etc/bash.bashrc
 fi
-log_info "Set 'export LANG=${LANG:-en_US.UTF-8}' in /etc/bash.bashrc"
+log_info "Set 'export LANG=${LANG}' in /etc/bash.bashrc"
 
 log_status "Completed."
 log_output ""
