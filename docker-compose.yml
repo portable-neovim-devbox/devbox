@@ -7,7 +7,6 @@ services:
                 USER_NAME: "${USER_NAME:-user}"
                 USER_ID: "${USER_ID:-1001}"
                 GROUP_ID: "${GROUP_ID:-1010}"
-                HOST_OS: "${HOST_OS:-Windows}"
                 HTTP_PROXY: "${HTTP_PROXY:-}"
                 HTTPS_PROXY: "${HTTPS_PROXY:-}"
                 NO_PROXY: "${NO_PROXY:-}"

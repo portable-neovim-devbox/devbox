@@ -1,0 +1,72 @@
+name: Test devbox build
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - neovim_version: stable
+            proxy: none
+          - neovim_version: stable
+            proxy: dummy
+          - neovim_version: v0.10.4
+            proxy: none
+          - neovim_version: stable
+            proxy: none
+            lang: ja_JP.UTF-8
+          - neovim_version: stable
+            proxy: none
+            lang: zh_CN.UTF-8
+          - neovim_version: stable
+            proxy: none
+            lang: ko_KR.UTF-8
+          - neovim_version: stable
+            proxy: none
+            lang: de_DE.UTF-8
+          - neovim_version: stable
+            proxy: none
+            user_name: devuser123
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Make scripts executable
+        run: chmod +x tests/devbox-build/run_smoke_tests.sh tests/devbox-build/proxy/setup_proxy.sh
+
+      - name: Setup dummy proxy
+        if: matrix.proxy == 'dummy'
+        run: bash tests/devbox-build/proxy/setup_proxy.sh
+
+      - name: Write .env
+        env:
+          NEOVIM_VERSION: ${{ matrix.neovim_version }}
+          USER_NAME: ${{ matrix.user_name || 'user' }}
+          LANG_VAL: ${{ matrix.lang || 'en_US.UTF-8' }}
+        run: |
+          {
+            echo "NEOVIM_VERSION=${NEOVIM_VERSION}"
+            echo "USER_NAME=${USER_NAME}"
+            echo "LANG=${LANG_VAL}"
+            echo "HTTP_PROXY=${PROXY_ADDR:-}"
+            echo "HTTPS_PROXY=${PROXY_ADDR:-}"
+            echo "NO_PROXY=localhost,127.0.0.1,*.docker.io"
+          } > .env
+
+      - name: Build image
+        run: docker compose build
+
+      - name: Run smoke tests
+        env:
+          EXPECTED_NEOVIM: ${{ matrix.neovim_version }}
+          EXPECTED_USER: ${{ matrix.user_name || 'user' }}
+        run: |
+          docker run --rm \
+            --entrypoint bash \
+            -v "$(pwd)/tests/devbox-build/run_smoke_tests.sh:/tmp/run_smoke_tests.sh:ro" \
+            devbox:latest \
+            /tmp/run_smoke_tests.sh "${EXPECTED_NEOVIM}" "${EXPECTED_USER}"

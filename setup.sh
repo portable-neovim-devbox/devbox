@@ -51,18 +51,6 @@ validate_neovim_version() {
     [[ "$v" == "stable" ]] || [[ "$v" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
 
-validate_host_os() {
-    local os="$1"
-    [[ "$os" == "Windows" || "$os" == "MacOS" || "$os" == "Linux" ]]
-}
-
-# ── auto-detect defaults ──────────────────────────────────────────────────────
-case "$(uname -s)" in
-    Darwin) DETECTED_OS="MacOS" ;;
-    Linux)  DETECTED_OS="Linux" ;;
-    *)      DETECTED_OS="Linux" ;;
-esac
-
 # ── banner ────────────────────────────────────────────────────────────────────
 echo
 echo -e "${C_BOLD}╔══════════════════════════════════════╗${C_RESET}"
@@ -92,16 +80,6 @@ echo -e "${C_BOLD}── Locale ────────────────
 LANG_VAL=$(prompt_default "LANG" "en_US.UTF-8")
 echo
 
-# ── Host OS ───────────────────────────────────────────────────────────────────
-echo -e "${C_BOLD}── Host OS ────────────────────────────${C_RESET}"
-info "  Options: Windows, MacOS, Linux"
-while true; do
-    HOST_OS=$(prompt_default "Host OS" "$DETECTED_OS")
-    if validate_host_os "$HOST_OS"; then break; fi
-    err "  Must be one of: Windows, MacOS, Linux"
-done
-echo
-
 # ── Proxy ─────────────────────────────────────────────────────────────────────
 echo -e "${C_BOLD}── Proxy (leave empty to skip) ────────${C_RESET}"
 HTTP_PROXY=$(prompt_default "HTTP_PROXY"  "")
@@ -123,12 +101,6 @@ USER_NAME=${USER_NAME}
 # Locale setting for the container
 # Default: "en_US.UTF-8"
 LANG=${LANG_VAL}
-
-# Host OS: select from
-# - "Windows" (default)
-# - "MacOS"
-# - "Linux"
-HOST_OS=${HOST_OS}
 
 # Proxy settings (leave empty if not needed)
 HTTP_PROXY=${HTTP_PROXY}
