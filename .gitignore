@@ -1,6 +1,11 @@
 # avoid other git repositories in subdirectories
 *.git/
 
+# dotfiles are managed externally; keep only structure
+dotfiles/**
+!dotfiles/**/
+!dotfiles/**/.gitkeep
+
 # ignore all files in projects/
 *projects/*
 

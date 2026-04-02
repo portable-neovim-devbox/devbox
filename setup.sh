@@ -52,6 +52,49 @@ validate_neovim_version() {
     [[ "$v" == "stable" ]] || [[ "$v" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
 
+generate_default_dotfiles() {
+    local d="${SCRIPT_DIR}/dotfiles"
+
+    info "Generating default dotfiles..."
+
+    # ── git ──────────────────────────────────────────────────────────────────
+    mkdir -p "${d}/git"
+    touch "${d}/git/.gitconfig"
+    touch "${d}/git/.gitattributes"
+
+    # ── nvim ─────────────────────────────────────────────────────────────────
+    mkdir -p "${d}/nvim/lsp"
+    mkdir -p "${d}/nvim/lua/config/plugins/define"
+    touch "${d}/nvim/init.lua"
+    touch "${d}/nvim/lazy-lock.json"
+    touch "${d}/nvim/lsp/lua-ls.lua"
+    touch "${d}/nvim/lua/config/clipboard.lua"
+    touch "${d}/nvim/lua/config/keymaps.lua"
+    touch "${d}/nvim/lua/config/lazy.lua"
+    touch "${d}/nvim/lua/myluamodule.lua"
+    touch "${d}/nvim/lua/config/plugins/define/catppuccin.lua"
+    touch "${d}/nvim/lua/config/plugins/define/lsp-config.lua"
+    touch "${d}/nvim/lua/config/plugins/define/lualine.lua"
+    touch "${d}/nvim/lua/config/plugins/define/neotree.lua"
+    touch "${d}/nvim/lua/config/plugins/define/telescope.lua"
+    touch "${d}/nvim/lua/config/plugins/define/treesitter.lua"
+
+    # ── starship ─────────────────────────────────────────────────────────────
+    mkdir -p "${d}/starship"
+    touch "${d}/starship/starship.toml"
+
+    # ── tmux ─────────────────────────────────────────────────────────────────
+    mkdir -p "${d}/tmux"
+
+    cat > "${d}/tmux/.tmux.conf" <<'EOF'
+set-option -g default-command bash
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB"
+EOF
+
+    success "✓ Default dotfiles generated."
+}
+
 
 # ── clear screen ─────────────────────────────────────────────────────────────────
 clear 2>/dev/null || true
@@ -132,6 +175,30 @@ echo
 # ── Optionally build ──────────────────────────────────────────────────────────
 if prompt_bool "Build Docker image now?" "n"; then
     echo
+
+    # ── Dotfiles source ───────────────────────────────────────────────────────
+    echo -e "${C_BOLD}── Dotfiles ───────────────────────────${C_RESET}"
+    if prompt_bool "Fetch dotfiles from GitHub? (portable-neovim-devbox/devbox-dotfiles)" "y"; then
+        echo
+        info "  Cloning dotfiles... (SSH passphrase may be required)"
+        rm -rf "${SCRIPT_DIR}/dotfiles"
+        if git clone git@github.com:portable-neovim-devbox/devbox-dotfiles.git "${SCRIPT_DIR}/dotfiles"; then
+            success "✓ Dotfiles fetched."
+        else
+            err "  Failed to clone dotfiles. Falling back to defaults."
+            generate_default_dotfiles
+        fi
+    else
+        generate_default_dotfiles
+    fi
+    echo
+
+    info "Cleaning up existing devbox containers, volumes, and images..."
+    docker container stop $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null
+    docker container rm $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null
+    docker volume rm $(docker volume ls -q --filter "name=devbox_" 2>/dev/null) 2>/dev/null
+    docker image rm $(docker images --filter "reference=*devbox*" --format "{{.ID}}" 2>/dev/null) 2>/dev/null
+
     info "Running: docker compose build"
     (cd "$SCRIPT_DIR" && docker compose build)
     success "✓ Build complete."
