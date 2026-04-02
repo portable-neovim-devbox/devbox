@@ -157,7 +157,7 @@ Edit the `.env` file in the project root to match your setup. This file is used 
 
 | Variable   | Description                                                                                                                                    | Default       |
 | :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| `LANG`     | Locale for the container. Pass `-e LANG` to inherit from host, or set explicitly (e.g. `en_US.UTF-8`, `ja_JP.UTF-8`). | `en_US.UTF-8` |
+| `LANG`     | Locale for the container. Empty by default — inherits from the host via `-e LANG`. Set explicitly to override (e.g. `en_US.UTF-8`, `ja_JP.UTF-8`). | *(empty)* |
 | `USER_ID`  | Override UID at runtime (Linux only)                                                                                                           | from `.env`   |
 | `GROUP_ID` | Override GID at runtime (Linux only)                                                                                                           | from `.env`   |
 

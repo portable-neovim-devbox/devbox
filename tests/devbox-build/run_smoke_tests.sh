@@ -7,6 +7,7 @@ set -euo pipefail
 
 EXPECTED_NEOVIM="${1:-stable}"
 EXPECTED_USER="${2:-user}"
+EXPECTED_LANG="${3:-}"
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
 pass() { echo "PASS: $*"; }
@@ -37,6 +38,13 @@ fi
 # ── User home directory ──────────────────────────────────────────────────────
 [ -d "/home/${EXPECTED_USER}" ] || fail "/home/${EXPECTED_USER} not found"
 pass "home directory /home/${EXPECTED_USER} exists"
+
+# ── Locale passthrough ───────────────────────────────────────────────────────
+if [ -n "${EXPECTED_LANG}" ]; then
+    [ "${LANG}" = "${EXPECTED_LANG}" ] \
+        || fail "LANG mismatch (expected ${EXPECTED_LANG}, got: ${LANG})"
+    pass "LANG=${LANG}"
+fi
 
 echo ""
 echo "All smoke tests passed."
