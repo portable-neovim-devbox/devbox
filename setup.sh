@@ -179,8 +179,15 @@ if prompt_bool "Build Docker image now?" "n"; then
     # ── Dotfiles source ───────────────────────────────────────────────────────
     echo -e "${C_BOLD}── Dotfiles ───────────────────────────${C_RESET}"
     if prompt_bool "Fetch dotfiles from GitHub? (portable-neovim-devbox/devbox-dotfiles)" "y"; then
-        warn "  GitHub fetch is not yet implemented."
-        generate_default_dotfiles
+        echo
+        info "  Cloning dotfiles... (SSH passphrase may be required)"
+        rm -rf "${SCRIPT_DIR}/dotfiles"
+        if git clone git@github.com:portable-neovim-devbox/devbox-dotfiles.git "${SCRIPT_DIR}/dotfiles"; then
+            success "✓ Dotfiles fetched."
+        else
+            err "  Failed to clone dotfiles. Falling back to defaults."
+            generate_default_dotfiles
+        fi
     else
         generate_default_dotfiles
     fi
