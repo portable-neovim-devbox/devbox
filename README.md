@@ -1,5 +1,9 @@
 # Portable Neovim DevBox
 
+<p align="center">
+  <img src="devbox.png" alt="DevBox logo" width="120">
+</p>
+
 A fully configured, portable Docker container with Neovim, Tmux, and modern CLI tools for developers.
 
 ## 1. 🚀 Overview
@@ -59,7 +63,7 @@ See more about Neovim in [Repository of Neovim](https://github.com/neovim/neovim
 ### 3.2. Starship (Modern Prompt)
 
 Starship prompt showing git status, language versions, execution time, and more at a glance.
-The default configuration is based on [Gruvbox Rainbow Preset](https://starship.rs/ja-JP/presets/gruvbox-rainbow).
+The default configuration is based on [Gruvbox Rainbow Preset](https://starship.rs/presets/gruvbox-rainbow).
 You can customize it in `dotfiles/starship/starship.toml`.
 See more about Starship in [Repository of Starship](https://github.com/starship/starship).
 
@@ -67,7 +71,8 @@ See more about Starship in [Repository of Starship](https://github.com/starship/
 
 For optimal display, install a [Nerd Font](https://github.com/ryanoasis/nerd-fonts/) on your **host machine**. Recommended fonts:
 
-- [JetBrains Mono Nerd Font](https://github.com/ryanoasis/nerd-fonts/)
+- [JetBrains Mono Nerd Font](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono) (recommended)
+- [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/) — browse all available fonts
 - [Moralerspace HWJP DOC](https://github.com/yuru7/moralerspace)
 
 ### 3.3. Tmux (Terminal Multiplexer)
@@ -95,7 +100,7 @@ See more about Tmux in [Repository of Tmux](https://github.com/tmux/tmux).
 
 ## 5. 🔧 Installation
 
-### 5.1. Install from the Repository
+### 5.1. Get the Repository
 
 #### 5.1.1. Quick Start (No Customization Needed)
 
@@ -115,9 +120,9 @@ If you also want to customize configurations or contribute to the project:
   ```bash
   git clone https://github.com/Xinor-a/portable-neovim-devbox.git
   ```
-  
+
   or
-  
+
   ```bash
   git clone git@github.com:Xinor-a/portable-neovim-devbox.git
   ```
@@ -128,69 +133,32 @@ If you also want to customize configurations or contribute to the project:
   cd portable-neovim-devbox
   ```
 
-### 5.2. Configure Environment Variables
+### 5.2. Run the Setup Script
 
-Edit the `.env` file in the project root to match your setup. This file is used in two ways:
-
-<<<<<<< Updated upstream
-- **Build time** — `docker compose build` reads `.env` automatically and passes the values as build arguments. `NEOVIM_VERSION`, `USER_NAME`, `HOST_OS` are baked into the image at this stage.
-- **Runtime** — `USER_ID`, `GROUP_ID`, and `LANG` can be overridden with `-e` when running `docker run`. `USER_ID`/`GROUP_ID` are only needed on **Linux** where bind-mounted file ownership must match the host. On **macOS**, Docker Desktop handles file permissions through its VM layer, so these options can be omitted.
-=======
-- **Build time** — `docker compose build` reads `.env` automatically and passes the values as build arguments. `NEOVIM_VERSION`, `USER_NAME` are baked into the image at this stage.
-- **Runtime** — `USER_ID`, `GROUP_ID`, and `LANG` can be overridden with `-e` when running `docker run`. `USER_ID`/`GROUP_ID` are only needed on **Linux** where bind-mounted file ownership must match the host. On **Windows** and **macOS**, Docker Desktop handles file permissions through its VM layer, so these options can be omitted.
->>>>>>> Stashed changes
-
-**Build-time variables (`.env`):**
-
-| Variable         | Description                                                     | Default   |
-| :--------------- | :-------------------------------------------------------------- | :-------- |
-| `NEOVIM_VERSION` | Neovim version to install (`"stable"` or a tag like `"v0.9.8"`) | `stable`  |
-| `USER_NAME`      | Main user name inside the container                             | `user`    |
-| `USER_ID`        | UID for the container user (matched to host for file ownership) | `1001`    |
-| `GROUP_ID`       | GID for the shared group inside the container                   | `1010`    |
-<<<<<<< Updated upstream
-| `HOST_OS`        | Your host OS (`"MacOS"` or `"Linux"`)                           | `Linux`   |
-=======
->>>>>>> Stashed changes
-
-**Runtime variables (`-e` flag):**
-
-| Variable   | Description                                                                                                                                    | Default       |
-| :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |
-| `LANG`     | Locale for the container. Empty by default — inherits from the host via `-e LANG`. Set explicitly to override (e.g. `en_US.UTF-8`, `ja_JP.UTF-8`). | *(empty)* |
-| `USER_ID`  | Override UID at runtime (Linux only)                                                                                                           | from `.env`   |
-| `GROUP_ID` | Override GID at runtime (Linux only)                                                                                                           | from `.env`   |
-
-Refer real command examples in [Section 6.1](#61-entering-your-development-environment).
-
-#### 5.2.1. Proxy Settings (Optional)
-
-If you are behind a corporate or network proxy, set the following variables in `.env`:
-
-| Variable       | Description                                       | Example                              |
-| :------------- | :------------------------------------------------ | :----------------------------------- |
-| `HTTP_PROXY`   | HTTP proxy URL                                    | `http://proxy.example.com:8080`      |
-| `HTTPS_PROXY`  | HTTPS proxy URL                                   | `http://proxy.example.com:8080`      |
-| `NO_PROXY`     | Comma-separated list of hosts to bypass the proxy | `localhost,127.0.0.1,.example.com`   |
-
-These settings are applied in two stages:
-
-- **Build time** — Passed as build arguments so that package managers (`apt-get`, `curl`, etc.) can fetch resources through the proxy during `docker compose build`.
-- **Runtime** — Injected as environment variables into the running container so that tools inside the container can also access the network through the proxy.
-
-If you do not need a proxy, simply leave these variables unset. They default to empty and have no effect.
-
-### 5.3. Build the Docker Image
-
-Run the following command in the root directory of the repository:
+Run the interactive setup script from the repository root:
 
 ```bash
-docker-compose build
+bash setup.sh
 ```
 
-### 5.4. Set Up and Run the Container
+The script prompts for the following settings and writes them to `.env`:
 
-#### 5.4.1. Create the Storage Container
+| Prompt        | Description                                                     | Default   |
+| :------------ | :-------------------------------------------------------------- | :-------- |
+| Neovim version | Version to install (`"stable"` or a tag like `"v0.9.8"`)      | `stable`  |
+| Username      | Main user name inside the container                             | `user`    |
+| LANG          | Locale for the container. Leave empty to inherit from the host. | *(empty)* |
+| HTTP_PROXY    | HTTP proxy URL. Leave empty if not needed.                      | *(empty)* |
+| HTTPS_PROXY   | HTTPS proxy URL. Leave empty if not needed.                     | *(empty)* |
+| NO_PROXY      | Hosts to bypass the proxy. Leave empty if not needed.           | *(empty)* |
+
+At the end, you will be asked whether to build the Docker image immediately. If you choose `n`, build it later with:
+
+```bash
+docker compose build
+```
+
+### 5.3. Create the Storage Container
 
 Create the data-only container that manages persistent volumes:
 
@@ -200,7 +168,7 @@ docker compose create devbox-storage
 
 This container holds all shared volumes (SSH keys, Neovim plugins, configuration data). It does not run — it only provides named volumes for the devbox container.
 
-#### 5.4.2. Launch the DevBox Container
+### 5.4. Launch
 
 See [Section 6.1](#61-entering-your-development-environment) for the launch command.
 
@@ -215,6 +183,8 @@ Start a new devbox container with the shared volumes and your project mounted:
 ```bash
 docker run --rm -it \
     -e LANG \
+    -e USER_ID="$(id -u)" \
+    -e GROUP_ID="$(id -g)" \
     --volumes-from devbox-storage-master \
     -v /path/to/project:/home/user/project \
     devbox:latest
@@ -235,9 +205,10 @@ docker exec -it <container-id> /bin/bash
 ```plaintext
 ProjectRoot/
 ├── .env                        # Environment variables for Docker build
-├── devbox.ico                  # DevBox icon (for Windows context menu)
+├── devbox.ico                  # DevBox icon
 ├── docker-compose.yml          # Docker Compose service definition
 ├── dockerfile                  # Docker image build configuration
+├── storage.dockerfile          # Storage container image build configuration
 ├── LICENSE                     # MIT License
 ├── README.md                   # This file
 ├── dotfiles/                   # Configuration files for tools in the container

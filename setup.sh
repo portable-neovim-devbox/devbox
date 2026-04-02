@@ -13,6 +13,7 @@ C_CYAN='\033[0;36m'
 C_GREEN='\033[0;32m'
 C_YELLOW='\033[0;33m'
 C_RED='\033[0;31m'
+C_MAGENTA='\033[1;35m'
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 info()    { echo -e "${C_CYAN}${*}${C_RESET}"; }
@@ -51,14 +52,31 @@ validate_neovim_version() {
     [[ "$v" == "stable" ]] || [[ "$v" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
 
+
+# ── clear screen ─────────────────────────────────────────────────────────────────
+clear 2>/dev/null || true
+
 # ── banner ────────────────────────────────────────────────────────────────────
 echo
-echo -e "${C_BOLD}╔══════════════════════════════════════╗${C_RESET}"
-echo -e "${C_BOLD}║        DevBox Interactive Setup      ║${C_RESET}"
-echo -e "${C_BOLD}╚══════════════════════════════════════╝${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}██████╗ ███████╗██╗   ██╗${C_MAGENTA}██████╗  ██████╗ ██╗  ██╗${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}██╔══██╗██╔════╝██║   ██║${C_MAGENTA}██╔══██╗██╔═══██╗╚██╗██╔╝${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}██║  ██║█████╗  ██║   ██║${C_MAGENTA}██████╔╝██║   ██║ ╚███╔╝ ${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}██║  ██║██╔══╝  ╚██╗ ██╔╝${C_MAGENTA}██╔══██╗██║   ██║ ██╔██╗ ${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}██████╔╝███████╗ ╚████╔╝ ${C_MAGENTA}██████╔╝╚██████╔╝██╔╝ ██╗${C_RESET}"
+sleep 0.05
+echo -e "  ${C_CYAN}╚═════╝ ╚══════╝  ╚═══╝  ${C_MAGENTA}╚═════╝  ╚═════╝ ╚═╝  ╚═╝${C_RESET}"
+sleep 0.05
+echo -e "  ${C_BOLD}Portable Neovim Development Environment${C_RESET}"
 echo
+sleep 1
 info "Press Enter to accept the default shown in [brackets]."
 echo
+sleep 0.5
 
 # ── Neovim version ────────────────────────────────────────────────────────────
 echo -e "${C_BOLD}── Neovim ─────────────────────────────${C_RESET}"

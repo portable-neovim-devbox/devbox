@@ -46,6 +46,8 @@ fi
 
 docker run --rm -it \
     -e LANG \
+    -e USER_ID="$(id -u)" \
+    -e GROUP_ID="$(id -g)" \
     --volumes-from devbox-storage-master \
     -v "${PATH_ARG}:/home/${USER_NAME}/project" \
     devbox:latest
