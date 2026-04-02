@@ -102,7 +102,7 @@ See more about Tmux in [Repository of Tmux](https://github.com/tmux/tmux).
 
 ### 5.1. Get the Repository
 
-#### 5.1.1. Quick Start (No Customization Needed)
+#### 5.1.1. Method 1 : Quick Installation (No Customization Needed)
 
 If you just want to use the pre-configured environment without modifications:
 
@@ -110,7 +110,7 @@ If you just want to use the pre-configured environment without modifications:
 2. Click on the green "Code" button and select "Download ZIP".
 3. Extract the downloaded ZIP file anywhere you want to locate.
 
-#### 5.1.2. Customization or Contribution
+#### 5.1.2. Method 2 : Customization or Contribution
 
 If you also want to customize configurations or contribute to the project:
 
@@ -133,7 +133,9 @@ If you also want to customize configurations or contribute to the project:
   cd portable-neovim-devbox
   ```
 
-### 5.2. Run the Setup Script
+## 6. 📖 Usage
+
+### 6.1. Initial Setup
 
 Run the interactive setup script from the repository root:
 
@@ -158,44 +160,26 @@ At the end, you will be asked whether to build the Docker image immediately. If 
 docker compose build
 ```
 
-### 5.3. Create the Storage Container
+### 6.2. Run DevBox Container
 
-Create the data-only container that manages persistent volumes:
+Run the container with:
 
 ```bash
-docker compose create devbox-storage
+bash run-devbox.sh /path/to/project
 ```
 
-This container holds all shared volumes (SSH keys, Neovim plugins, configuration data). It does not run — it only provides named volumes for the devbox container.
+Replace `/path/to/project` with the absolute path to the project you want to work on. If you omit the path, the current directory will be used.
 
-### 5.4. Launch
+This script checks for the required Docker volumes, creates them if they don't exist, detects the container username, and runs the devbox container with the specified project directory mounted.
 
-See [Section 6.1](#61-entering-your-development-environment) for the launch command.
+### 6.3. Create a Convenient Alias
 
-## 6. 📖 Usage
-
-### 6.1. Entering Your Development Environment
-
-Start a new devbox container with the shared volumes and your project mounted:
-
-**Linux / macOS:**
+Also add the following to your `~/.bashrc` or `~/.zshrc` to create a convenient `devbox` alias for launching the container from any directory:
 
 ```bash
-docker run --rm -it \
-    -e LANG \
-    -e USER_ID="$(id -u)" \
-    -e GROUP_ID="$(id -g)" \
-    --volumes-from devbox-storage-master \
-    -v /path/to/project:/home/user/project \
-    devbox:latest
-```
-
-Replace the path with the absolute path to the project you want to work on. The `--rm` flag removes the container on exit; persistent data is stored in the `devbox-storage` volumes.
-
-To attach to an already running devbox container:
-
-```bash
-docker exec -it <container-id> /bin/bash
+export DEVBOX_PATH="/path/to/devbox"
+alias devbox='bash "$DEVBOX_PATH/run-devbox.sh"'
+export LANG=ja_JP.UTF-8  # optional: set your preferred locale
 ```
 
 ## 7. 📁 Project Structure
@@ -325,56 +309,10 @@ All volumes are managed by the `devbox-storage` data-only container and shared w
 | `root-nvim-plugin`  | `/root/.local/share/nvim`        | Root user Neovim plugin data      |
 | `user-nvim-plugin`  | `/home/<user>/.local/share/nvim` | Container user Neovim plugin data |
 
-## 8. 🐳 Using the Image from Another Directory
-
-Once you have built the image with `docker compose build`, it is tagged as `devbox:latest`. The same command shown in [Section 6.1](#61-entering-your-development-environment) works from any directory — no need to rebuild or create additional compose files. Persistent data is shared through the `devbox-storage` volumes.
-
-### 8.1. Linux / macOS Setup
-
-Add the following to your `~/.bashrc` or `~/.zshrc`:
-
-```bash
-export DEVBOX_PATH="/path/to/devbox"
-alias devbox='bash "$DEVBOX_PATH/run-devbox.sh"'
-export LANG=ja_JP.UTF-8  # optional: set your preferred locale
-```
-
-Replace `/path/to/devbox` with the absolute path to this repository.
-Set `LANG` to your preferred locale, or remove the line if not needed.
-
-After editing, reload the shell:
-
-```bash
-source ~/.bashrc
-```
-
-You can then launch devbox from any directory:
-
-```bash
-devbox                        # mount current directory
-devbox /path/to/project       # mount specified directory
-```
-
-### 8.2. Launch Scripts
-
-The repository includes a launch script that automates volume creation and container startup. It checks whether the required Docker volumes exist, creates them if missing, detects the container username automatically, and runs the devbox container with the specified project directory.
-
-#### 8.2.1. Linux / macOS (Bash)
-
-```bash
-bash run-devbox.sh /path/to/project
-```
-
-If the path argument is omitted, the current directory is used:
-
-```bash
-bash run-devbox.sh
-```
-
-## 9. 🤝 Contributing
+## 8. 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 10. 📄 License
+## 9. 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/Xinor-a/portable-neovim-devbox/blob/main/LICENSE) file for details.
