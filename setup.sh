@@ -194,10 +194,10 @@ if prompt_bool "Build Docker image now?" "n"; then
     echo
 
     info "Cleaning up existing devbox containers, volumes, and images..."
-    docker container stop $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null
-    docker container rm $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null
-    docker volume rm $(docker volume ls -q --filter "name=devbox_" 2>/dev/null) 2>/dev/null
-    docker image rm $(docker images --filter "reference=*devbox*" --format "{{.ID}}" 2>/dev/null) 2>/dev/null
+    docker container stop $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null || true
+    docker container rm $(docker ps -a -q --filter "name=devbox" 2>/dev/null) 2>/dev/null || true
+    docker volume rm $(docker volume ls -q --filter "name=devbox_" 2>/dev/null) 2>/dev/null || true
+    docker image rm $(docker images --filter "reference=*devbox*" --format "{{.ID}}" 2>/dev/null) 2>/dev/null || true
 
     info "Running: docker compose build"
     (cd "$SCRIPT_DIR" && docker compose build)
