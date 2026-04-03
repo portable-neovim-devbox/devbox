@@ -12,16 +12,31 @@ jobs:
       - name: Make scripts executable
         run: chmod +x setup.sh tests/devbox-build/run_smoke_tests.sh
 
+      - name: Get runner UID
+        run: echo "RUNNER_UID=$(id -u)" >> $GITHUB_ENV
+
       - name: Run setup.sh (build, no clone)
         run: printf "\n\n\n\n\n\ny\nn\n" | bash setup.sh
 
+      - name: Create storage container
+        run: docker compose create devbox-storage
+
+      - name: Create project directory
+        run: mkdir -p /tmp/test-project
+
       - name: Run smoke tests
+        env:
+          EXPECTED_USER: user
+          EXPECTED_USER_ID: ${{ env.RUNNER_UID }}
+          USER_ID: ${{ env.RUNNER_UID }}
         run: |
           docker run --rm \
-            --entrypoint bash \
+            -e USER_ID \
+            --volumes-from devbox-storage-master \
             -v "$(pwd)/tests/devbox-build/run_smoke_tests.sh:/tmp/run_smoke_tests.sh:ro" \
+            -v "/tmp/test-project:/home/${EXPECTED_USER}/project" \
             devbox:latest \
-            /tmp/run_smoke_tests.sh
+            /tmp/run_smoke_tests.sh "stable" "${EXPECTED_USER}" "" "${EXPECTED_USER_ID}"
 
   build-clone:
     runs-on: ubuntu-latest
@@ -39,13 +54,28 @@ jobs:
       - name: Make scripts executable
         run: chmod +x setup.sh tests/devbox-build/run_smoke_tests.sh
 
+      - name: Get runner UID
+        run: echo "RUNNER_UID=$(id -u)" >> $GITHUB_ENV
+
       - name: Run setup.sh (build, clone)
         run: printf "\n\n\n\n\n\ny\ny\n" | bash setup.sh
 
+      - name: Create storage container
+        run: docker compose create devbox-storage
+
+      - name: Create project directory
+        run: mkdir -p /tmp/test-project
+
       - name: Run smoke tests
+        env:
+          EXPECTED_USER: user
+          EXPECTED_USER_ID: ${{ env.RUNNER_UID }}
+          USER_ID: ${{ env.RUNNER_UID }}
         run: |
           docker run --rm \
-            --entrypoint bash \
+            -e USER_ID \
+            --volumes-from devbox-storage-master \
             -v "$(pwd)/tests/devbox-build/run_smoke_tests.sh:/tmp/run_smoke_tests.sh:ro" \
+            -v "/tmp/test-project:/home/${EXPECTED_USER}/project" \
             devbox:latest \
-            /tmp/run_smoke_tests.sh
+            /tmp/run_smoke_tests.sh "stable" "${EXPECTED_USER}" "" "${EXPECTED_USER_ID}"

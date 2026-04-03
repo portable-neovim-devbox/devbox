@@ -40,6 +40,21 @@ fi
 [ -d "/home/${EXPECTED_USER}" ] || fail "/home/${EXPECTED_USER} not found"
 pass "home directory /home/${EXPECTED_USER} exists"
 
+# ── Username ──────────────────────────────────────────────────────────────────
+actual_user=$(whoami)
+[ "${actual_user}" = "${EXPECTED_USER}" ] \
+    || fail "username mismatch (expected ${EXPECTED_USER}, got: ${actual_user})"
+pass "whoami = ${EXPECTED_USER}"
+
+# ── sudo ──────────────────────────────────────────────────────────────────────
+sudo -n true 2>/dev/null || fail "sudo not available for ${EXPECTED_USER}"
+pass "sudo works for ${EXPECTED_USER}"
+
+# ── HOME ──────────────────────────────────────────────────────────────────────
+[ "${HOME}" = "/home/${EXPECTED_USER}" ] \
+    || fail "HOME mismatch (expected /home/${EXPECTED_USER}, got: ${HOME})"
+pass "HOME=/home/${EXPECTED_USER}"
+
 # ── Locale passthrough ───────────────────────────────────────────────────────
 if [ -n "${EXPECTED_LANG}" ]; then
     [ "${LANG}" = "${EXPECTED_LANG}" ] \
