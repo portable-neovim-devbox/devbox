@@ -205,4 +205,30 @@ if prompt_bool "Build Docker image now?" "n"; then
 fi
 
 echo
+
+# ── bashrc setup ──────────────────────────────────────────────────────────
+BASHRC_FILE="${HOME}/.bashrc"
+
+ALIAS_BEGIN="# >>> devbox alias begin <<<"
+ALIAS_END="# >>> devbox alias end <<<"
+ALIAS_BLOCK="${ALIAS_BEGIN}
+export DEVBOX_PATH=\"${SCRIPT_DIR}\"
+alias devbox='bash \"\$DEVBOX_PATH/run-devbox.sh\"'
+${ALIAS_END}"
+
+if [ -f "$BASHRC_FILE" ]; then
+    if grep -qF "$ALIAS_BEGIN" "$BASHRC_FILE"; then
+        # Remove existing block (begin line through end line, inclusive)
+        sed -i "/$(printf '%s' "$ALIAS_BEGIN" | sed 's/[^^]/[&]/g; s/\^/\\^/g')/,/$(printf '%s' "$ALIAS_END" | sed 's/[^^]/[&]/g; s/\^/\\^/g')/d" "$BASHRC_FILE"
+        info "Removed existing devbox alias from ${BASHRC_FILE}."
+    fi
+fi
+
+printf '\n%s\n' "$ALIAS_BLOCK" >> "$BASHRC_FILE"
+success "✓ devbox alias added to ${BASHRC_FILE}."
+# shellcheck source=/dev/null
+source "$BASHRC_FILE"
+success "✓ Sourced ${BASHRC_FILE}."
+
+echo
 success "Setup done!"
