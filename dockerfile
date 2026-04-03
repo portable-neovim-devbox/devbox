@@ -17,13 +17,15 @@ ENV USER_NAME=$USER_NAME
 
 ENV GROUP_NAME="g-devbox"
 
-RUN groupadd --gid 1001 ${USER_NAME} \
-&& useradd --uid 1001 --gid 1001 -m -s /bin/bash ${USER_NAME} \
+RUN userdel -r ubuntu
+
+RUN groupadd ${USER_NAME} \
+&& useradd -m -s /bin/bash -g ${USER_NAME} ${USER_NAME} \
 && echo ${USER_NAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USER_NAME} \
 && chmod 0440 /etc/sudoers.d/${USER_NAME} \
 && echo 'root:root' | chpasswd \
 && echo "${USER_NAME}:${USER_NAME}" | chpasswd \
-&& groupadd --gid 1010 ${GROUP_NAME} \
+&& groupadd ${GROUP_NAME} \
 && usermod -aG ${GROUP_NAME} root \
 && usermod -aG ${GROUP_NAME} ${USER_NAME}
 

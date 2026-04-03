@@ -37,7 +37,7 @@ USER_NAME=$(docker run --rm \
     --entrypoint bash \
     --volumes-from devbox-storage-master \
     devbox:latest \
-    -c "ls /home | grep -v ubuntu | head -1")
+    -c "ls /home | head -1")
 USER_NAME=$(echo "$USER_NAME" | tr -d '[:space:]')
 
 if [ -z "$USER_NAME" ]; then
@@ -47,7 +47,6 @@ fi
 docker run --rm -it \
     -e LANG \
     -e USER_ID="$(id -u)" \
-    -e GROUP_ID="$(id -g)" \
     --volumes-from devbox-storage-master \
     -v "${PATH_ARG}:/home/${USER_NAME}/project" \
     devbox:latest
