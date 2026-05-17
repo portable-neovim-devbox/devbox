@@ -136,11 +136,6 @@ echo -e "${C_BOLD}── Container User ─────────────�
 USER_NAME=$(prompt_default "Username inside container" "user")
 echo
 
-# ── Locale ────────────────────────────────────────────────────────────────────
-echo -e "${C_BOLD}── Locale ─────────────────────────────${C_RESET}"
-LANG_VAL=$(prompt_default "LANG" "")
-echo
-
 # ── Proxy ─────────────────────────────────────────────────────────────────────
 echo -e "${C_BOLD}── Proxy (leave empty to skip) ────────${C_RESET}"
 HTTP_PROXY=$(prompt_default "HTTP_PROXY"  "")
@@ -158,10 +153,6 @@ NEOVIM_VERSION=${NEOVIM_VERSION}
 # Main user name inside the container
 # Default: "user"
 USER_NAME=${USER_NAME}
-
-# Locale setting for the container
-# Default: "en_US.UTF-8"
-LANG=${LANG_VAL}
 
 # Proxy settings (leave empty if not needed)
 HTTP_PROXY=${HTTP_PROXY}
