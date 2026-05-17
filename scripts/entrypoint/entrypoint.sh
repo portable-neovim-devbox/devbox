@@ -129,10 +129,10 @@ log_status "Started adding environment variables to /etc/bash.bashrc..."
 
 locale-gen "${LANG}"
 
-if grep -q "export LANG=" /etc/bash.bashrc; then
-    sed -i "s/^export LANG=.*/export LANG=${LANG}/" /etc/bash.bashrc
+if grep -q "export LANG=" /etc/devbox/dotfiles/bash.bashrc; then
+    sed -i "s/^export LANG=.*/export LANG=${LANG}/" /etc/devbox/dotfiles/bash.bashrc
 else
-    echo "export LANG=${LANG}" >> /etc/bash.bashrc
+    echo "export LANG=${LANG}" >> /etc/devbox/dotfiles/bash.bashrc
 fi
 log_info "Set 'export LANG=${LANG}' in /etc/bash.bashrc"
 

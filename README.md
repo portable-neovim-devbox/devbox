@@ -149,7 +149,6 @@ The script prompts for the following settings and writes them to `.env`:
 | :------------ | :-------------------------------------------------------------- | :-------- |
 | Neovim version | Version to install (`"stable"` or a tag like `"v0.9.8"`)      | `stable`  |
 | Username      | Main user name inside the container                             | `user`    |
-| LANG          | Locale for the container. Leave empty to inherit from the host. | *(empty)* |
 | HTTP_PROXY    | HTTP proxy URL. Leave empty if not needed.                      | *(empty)* |
 | HTTPS_PROXY   | HTTPS proxy URL. Leave empty if not needed.                     | *(empty)* |
 | NO_PROXY      | Hosts to bypass the proxy. Leave empty if not needed.           | *(empty)* |
@@ -179,7 +178,7 @@ Also add the following to your `~/.bashrc` or `~/.zshrc` to create a convenient 
 ```bash
 export DEVBOX_PATH="/path/to/devbox"
 alias devbox='bash "$DEVBOX_PATH/run-devbox.sh"'
-export LANG=ja_JP.UTF-8  # optional: set your preferred locale
+export LANG=ja_JP.UTF-8  # set your preferred locale — the container inherits this value
 ```
 
 ## 7. 📁 Project Structure

@@ -16,7 +16,7 @@ jobs:
         run: echo "RUNNER_UID=$(id -u)" >> $GITHUB_ENV
 
       - name: Run setup.sh (build, no clone)
-        run: printf "\n\n\n\n\n\ny\nn\n" | bash setup.sh
+        run: printf "\n\n\n\n\ny\nn\n" | bash setup.sh
 
       - name: Create storage container
         run: docker compose create devbox-storage
@@ -58,7 +58,7 @@ jobs:
         run: echo "RUNNER_UID=$(id -u)" >> $GITHUB_ENV
 
       - name: Run setup.sh (build, clone)
-        run: printf "\n\n\n\n\n\ny\ny\n" | bash setup.sh
+        run: printf "\n\n\n\n\ny\ny\n" | bash setup.sh
 
       - name: Create storage container
         run: docker compose create devbox-storage
