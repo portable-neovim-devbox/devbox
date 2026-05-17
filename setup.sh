@@ -227,8 +227,9 @@ fi
 printf '\n%s\n' "$ALIAS_BLOCK" >> "$BASHRC_FILE"
 success "✓ devbox alias added to ${BASHRC_FILE}."
 # shellcheck source=/dev/null
-source "$BASHRC_FILE"
-success "✓ Sourced ${BASHRC_FILE}."
 
 echo
 success "Setup done!"
+
+warn "  → Run 'source ~/.bashrc' or open a new terminal to activate the alias."
+
