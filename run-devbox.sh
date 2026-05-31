@@ -37,7 +37,7 @@ USER_NAME=$(docker run --rm \
     --entrypoint bash \
     --volumes-from devbox-storage-master \
     devbox:latest \
-    -c "ls /home | head -1")
+    -c "ls $HOME")
 USER_NAME=$(echo "$USER_NAME" | tr -d '[:space:]')
 
 if [ -z "$USER_NAME" ]; then
