@@ -47,11 +47,11 @@ log_status "Configuring APT proxy settings..."
 
 str_proxy_info=""
 
-if [ -n "${http_proxy:-}" ]; then
-    str_proxy_info+="Acquire::http::Proxy \"${http_proxy}\";\n"
+if [ -n "${http_proxy:-${HTTP_PROXY:-}}" ]; then
+    str_proxy_info+="Acquire::http::Proxy \"${http_proxy:-${HTTP_PROXY:-}}\";\n"
 fi
-if [ -n "${https_proxy:-}" ]; then
-    str_proxy_info+="Acquire::https::Proxy \"${https_proxy}\";\n"
+if [ -n "${https_proxy:-${HTTPS_PROXY:-}}" ]; then
+    str_proxy_info+="Acquire::https::Proxy \"${https_proxy:-${HTTPS_PROXY:-}}\";\n"
 fi
 
 if touch /etc/apt/apt.conf.d/70proxy; then
